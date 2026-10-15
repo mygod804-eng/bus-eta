@@ -209,8 +209,9 @@ function searchKmb(q){
 }
 function searchCtb(q){
   return jget(CTB+"/route/CTB/"+encodeURIComponent(q)).then(function(j){
-    if(!j.data) return [];
     var base = j.data;
+    // 唔存在嘅路線：API 會回 200 + data:{} — 一定要驗真欄位
+    if(!base || !base.route || !base.orig_tc || !base.dest_tc) return [];
     var list = [{co:"CTB", route:base.route, bound:"O", st:"1", orig:base.orig_tc, dest:base.dest_tc}];
     return jget(CTB+"/route-stop/CTB/"+encodeURIComponent(q)+"/inbound").then(function(rs){
       var d = (rs.data||[]);
